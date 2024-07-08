@@ -1,5 +1,7 @@
-import numpy as np
-import torch
+import matplotlib.pyplot as plt
+
+from gcn import GCN
+from mer import MER
 
 import torch
 from torch_geometric.data import Data, DataLoader
@@ -35,12 +37,6 @@ def create_non_iid_data(data_list):
 
 task_data_list_non_iid = create_non_iid_data(task_data_list_iid)
 data_loader_non_iid = DataLoader(task_data_list_non_iid, batch_size=1)
-
-
-import matplotlib.pyplot as plt
-
-from gcn import GCN
-from mer import MER
 
 def plot_performance(losses, title):
     plt.figure(figsize=(10, 6))
