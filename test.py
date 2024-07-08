@@ -46,6 +46,7 @@ def plot_performance(losses, title):
     plt.ylabel('Loss')
     plt.title(title)
     plt.legend()
+    plt.savefig('performance.pdf')
     plt.show()
 
 # Training with different settings
