@@ -4,11 +4,13 @@ from torch_geometric.data import Data, DataLoader
 from gcn import GCN
 from mer import MER
 
+
 def create_synthetic_graph(num_nodes, num_features, num_classes):
     x = torch.randn((num_nodes, num_features))
     edge_index = torch.randint(0, num_nodes, (2, 200))
     y = torch.randint(0, num_classes, (num_nodes,))
     return Data(x=x, edge_index=edge_index, y=y)
+
 
 task_data_list = [create_synthetic_graph(100, 16, 10) for _ in range(10)]
 data_loader = DataLoader(task_data_list, batch_size=1)

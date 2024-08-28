@@ -52,9 +52,3 @@ class MER:
         # Update memory
         self.update_memory(current_data)
         return loss
-
-    def train(self, data_loader, epochs=10):
-        for epoch in range(epochs):
-            for data in data_loader:
-                loss = self.train_step(data)
-                print(f'Epoch {epoch+1}, Loss: {loss.item()}')
