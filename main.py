@@ -75,6 +75,6 @@ for i, task_data in enumerate(task_data_list):
         loss_for_mer.append(total_loss)
 
 
-plot_loss_curve(loss_for_all_data_together, title='All Data Together')
-plot_loss_curve(loss_for_naive_learning, title='Naive Learning')
-plot_loss_curve(loss_for_mer, title='MER')
+plot_loss_curve(loss_for_all_data_together, title='All Data Together', case="All Data Together")
+plot_loss_curve(loss_for_naive_learning, title='Naive Learning', case="Naive Learning")
+plot_loss_curve(loss_for_mer, title='MER', case="MER")
