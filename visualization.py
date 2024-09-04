@@ -10,4 +10,3 @@ def plot_loss_curve(losses, title='Training Loss Curve', xlable='Epoch', ylabel=
     plt.grid(True)
     plt.savefig('./Figures/' + case + '.pdf')
     plt.show()
-

@@ -1,10 +1,9 @@
+import matplotlib.pyplot as plt
+import networkx as nx
 import torch
 from torch_geometric.data import Data
 
-import networkx as nx
-import matplotlib.pyplot as plt
-
-from utils import NUM_CLASSES, NUM_NODES, NUM_FEATURES, NUM_EDGES
+from utils import NUM_NODES, NUM_FEATURES, NUM_EDGES
 
 base_graph = torch.randn((NUM_NODES, NUM_FEATURES))
 edge_index = torch.randint(0, NUM_NODES, (2, NUM_EDGES))
