@@ -4,7 +4,7 @@ import random
 
 
 class MER:
-    def __init__(self, model, memory_size=100, batch_size=32, lr=0.01, alpha=0.1, beta=0.01):
+    def __init__(self, model, memory_size=100, batch_size=32, lr=0.01, alpha=0.1, beta=0.01, gamma=0.01):
         self.model = model
         self.memory = []
         self.memory_size = memory_size
@@ -12,6 +12,7 @@ class MER:
         self.optimizer = optim.Adam(self.model.parameters(), lr=lr)
         self.alpha = alpha
         self.beta = beta
+        self.gamma = gamma
 
     def update_memory(self, data):
         if len(self.memory) < self.memory_size:
@@ -24,10 +25,13 @@ class MER:
         return random.sample(self.memory, min(len(self.memory), self.batch_size))
 
     def train_step(self, current_data):
-        # Sample memory
         memory_samples = self.sample_memory()
+        s = len(memory_samples)  # Number of sampled batches
 
-        # Within-batch Reptile meta-update
+        # Save initial model parameters for meta-updates
+        initial_params = {name: param.clone() for name, param in self.model.named_parameters()}
+
+        # Within-batch Reptile meta-updates
         for data in memory_samples:
             x, edge_index, y = data.x, data.edge_index, data.y
             self.optimizer.zero_grad()
@@ -36,19 +40,25 @@ class MER:
             loss.backward()
             self.optimizer.step()
 
-        # Reptile meta-update
+            # Meta-update within the batch
+            updated_params = {name: param.clone() for name, param in self.model.named_parameters()}
+            for name, param in self.model.named_parameters():
+                param.data = initial_params[name] + self.beta * (updated_params[name] - initial_params[name])
+
+        # Across-batch Reptile meta-update
+        final_params = {name: param.clone() for name, param in self.model.named_parameters()}
+        for name, param in self.model.named_parameters():
+            param.data = initial_params[name] + self.gamma * (final_params[name] - initial_params[name])
+
+        # Now train on the current data
         self.optimizer.zero_grad()
         x, edge_index, y = current_data.x, current_data.edge_index, current_data.y
-        initial_params = {name: param.clone() for name, param in self.model.named_parameters()}
-
         out = self.model(x, edge_index)
         loss = nn.CrossEntropyLoss()(out, y)
         loss.backward()
         self.optimizer.step()
 
-        for name, param in self.model.named_parameters():
-            param.data = initial_params[name] + self.beta * (param.data - initial_params[name])
-
-        # Update memory
+        # Update memory with the current data
         self.update_memory(current_data)
+
         return loss
