@@ -12,7 +12,7 @@ from gcn import GCN
 # Case 1: Showing Model All Data Together
 
 # Generate tasks with increasing dissimilarity
-task_data_list = [create_synthetic_graph(NUM_NODES, NUM_FEATURES, NUM_CLASSES, dissimilarity=i * 0.5) for i in range(NUM_TASKS)]
+task_data_list = [create_synthetic_graph(NUM_NODES, NUM_FEATURES, NUM_CLASSES, dissimilarity=i * 0.9) for i in range(NUM_TASKS)]
 task_data_loader = DataLoader(task_data_list, batch_size=8, shuffle=True)
 
 model = GCN(in_channels=NUM_FEATURES, out_channels=NUM_CLASSES)
@@ -21,7 +21,7 @@ criterion = nn.CrossEntropyLoss()
 
 loss_for_all_data_together = []
 
-for epoch in range(100):
+for epoch in range(200):
     total_loss = 0
     for data in task_data_loader:
         optimizer.zero_grad()
@@ -33,7 +33,7 @@ for epoch in range(100):
     loss_for_all_data_together.append(total_loss)
 
 # Case 2: Naive Learning
-task_data_list = [create_synthetic_graph(NUM_NODES, NUM_FEATURES, NUM_CLASSES, dissimilarity=i * 0.5) for i in range(NUM_TASKS)]
+task_data_list = [create_synthetic_graph(NUM_NODES, NUM_FEATURES, NUM_CLASSES, dissimilarity=i * 0.9) for i in range(NUM_TASKS)]
 
 model = GCN(in_channels=NUM_FEATURES, out_channels=NUM_CLASSES)
 optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
@@ -44,7 +44,7 @@ loss_for_naive_learning = []
 
 for i, task_data in enumerate(task_data_list):
     task_data_loader = DataLoader([task_data], batch_size=1, shuffle=True)
-    for epoch in range(100):
+    for epoch in range(20):
         total_loss = 0
         for data in task_data_loader:
             optimizer.zero_grad()
@@ -58,7 +58,7 @@ for i, task_data in enumerate(task_data_list):
 
 # Case 3: MER
 
-task_data_list = [create_synthetic_graph(NUM_NODES, NUM_FEATURES, NUM_CLASSES, dissimilarity=i * 0.5) for i in range(NUM_TASKS)]
+task_data_list = [create_synthetic_graph(NUM_NODES, NUM_FEATURES, NUM_CLASSES, dissimilarity=i * 0.9) for i in range(NUM_TASKS)]
 
 model = GCN(in_channels=NUM_FEATURES, out_channels=NUM_CLASSES)
 mer = MER(model=model, memory_size=50, batch_size=10, lr=0.01, alpha=0.1, beta=0.01, gamma=0.1)
@@ -67,7 +67,7 @@ loss_for_mer = []
 
 for i, task_data in enumerate(task_data_list):
     task_data_loader = DataLoader([task_data], batch_size=1, shuffle=True)
-    for epoch in range(100):
+    for epoch in range(20):
         total_loss = 0
         for data in task_data_loader:
             loss = mer.train_step(data)
