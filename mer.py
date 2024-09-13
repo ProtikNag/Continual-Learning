@@ -5,7 +5,7 @@ import torch.optim as optim
 
 
 class MER:
-    def __init__(self, model, memory_size=100, batch_size=32, lr=0.01, alpha=0.1, beta=0.01, gamma=0.01):
+    def __init__(self, model, memory_size=5000, batch_size=256, lr=0.01, alpha=0.1, beta=0.01, gamma=0.01):
         self.model = model
         self.memory = []
         self.memory_size = memory_size
