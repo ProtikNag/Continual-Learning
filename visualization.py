@@ -42,3 +42,17 @@ def plot_performance_histograms(naive_learning_performance, mer_performance, tit
     plt.subplots_adjust(top=0.85)
     plt.savefig('./Figures/' + title + '.pdf')
     plt.show()
+
+
+def plot_impact_of_parameters(performance_results):
+    fig, ax = plt.subplots(1, 2, figsize=(14, 6))
+
+    scatter = ax[0].scatter(performance_results[:, 0], performance_results[:, 1], c=performance_results[:, 2],
+                            cmap='viridis')
+    ax[0].set_title('MER Performance (Accuracy) vs Beta, Gamma')
+    ax[0].set_xlabel('Beta')
+    ax[0].set_ylabel('Gamma')
+    fig.colorbar(scatter, ax=ax[0])
+    plt.tight_layout()
+    plt.savefig('./Figures/Impact_of_Parameters.pdf')
+    plt.show()
